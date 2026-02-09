@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login - FreelanceFlow</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+
+<body>
+
+<div class="flex" style="min-height:100vh;">
+
+  <!-- LEFT PANEL -->
+  <div class="flex items-center justify-center w-full p-6">
+
+    <div style="max-width:400px; width:100%;">
+
+      <!-- LOGO -->
+      <div class="flex items-center gap-2 m-4">
+        <div class="avatar-fallback">⚡</div>
+        <h2 class="font-bold">FreelanceFlow</h2>
+      </div>
+
+      <h1 class="text-2xl font-bold m-2">Welcome back</h1>
+      <p class="text-muted-foreground m-2">
+        Enter your credentials to access your account
+      </p>
+
+      <!-- FORM -->
+      <form onsubmit="login(event)">
+
+        <div class="form-item">
+          <label class="label">Email</label>
+          <input class="input" type="email" placeholder="john@example.com" required>
+        </div>
+
+        <div class="form-item">
+          <div class="flex justify-between">
+            <label class="label">Password</label>
+            <a href="#" class="text-sm text-primary">Forgot?</a>
+          </div>
+          <input class="input" type="password" placeholder="••••••" required>
+        </div>
+
+        <button class="btn btn-primary w-full" id="loginBtn">
+          Sign in
+        </button>
+
+      </form>
+
+      <p class="text-sm text-muted-foreground m-4">
+        Don't have an account?
+        <a href="signup.html" class="text-primary">Sign up</a>
+      </p>
+
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="flex items-center justify-center w-full bg-secondary">
+
+    <div style="text-align:center; max-width:300px;">
+      <div class="avatar-fallback" style="width:80px;height:80px;font-size:30px;margin:auto;">
+        ⚡
+      </div>
+
+      <h2 class="font-bold m-2">Smart CRM for Freelancers</h2>
+      <p class="text-muted-foreground">
+        Track clients, projects and revenue in one dashboard.
+      </p>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+function login(e){
+  e.preventDefault();
+
+  let btn = document.getElementById("loginBtn");
+  btn.innerText = "Signing in...";
+  btn.disabled = true;
+
+  setTimeout(()=>{
+    alert("Login successful!");
+    window.location.href = "dashboard";
+  },1000);
+}
+</script>
+
+</body>
+</html>

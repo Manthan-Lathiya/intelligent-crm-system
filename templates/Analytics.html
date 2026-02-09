@@ -1,0 +1,99 @@
+{% extends "layout.html" %}
+{% block content %}
+  <h1 class="text-2xl font-bold">Analytics</h1>
+  <p class="text-muted-foreground">Deep dive into your business metrics</p>
+
+  <!-- CHART GRID -->
+  <div class="flex gap-4 m-4">
+
+    <!-- BAR CHART -->
+    <div class="card p-4 w-full">
+      <h3 class="font-semibold">Revenue vs Expenses</h3>
+      <canvas id="barChart"></canvas>
+    </div>
+
+    <!-- PIE CHART -->
+    <div class="card p-4 w-full">
+      <h3 class="font-semibold">Revenue by Service</h3>
+      <canvas id="pieChart"></canvas>
+    </div>
+
+  </div>
+
+  <!-- LINE CHART -->
+  <div class="card p-4 m-4">
+    <h3 class="font-semibold">Profit Trend</h3>
+    <canvas id="lineChart"></canvas>
+  </div>
+
+</div>
+<!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+/* ===== DEMO DATA ===== */
+/* Replace later with Flask JSON */
+
+const months = ["Jan","Feb","Mar","Apr","May","Jun"];
+
+const revenue = [4000,5200,4800,6500,7200,8000];
+const expenses = [2000,2400,2600,3000,3500,3800];
+const profit = revenue.map((r,i)=>r-expenses[i]);
+
+/* ===== BAR CHART ===== */
+new Chart(document.getElementById("barChart"),{
+  type:"bar",
+  data:{
+    labels:months,
+    datasets:[
+      {
+        label:"Revenue",
+        data:revenue,
+        backgroundColor:"#06b6d4"
+      },
+      {
+        label:"Expenses",
+        data:expenses,
+        backgroundColor:"#ef4444"
+      }
+    ]
+  }
+});
+
+/* ===== PIE CHART ===== */
+new Chart(document.getElementById("pieChart"),{
+  type:"pie",
+  data:{
+    labels:["Web Dev","Mobile","Consulting","Design"],
+    datasets:[{
+      data:[4500,2500,1800,1200],
+      backgroundColor:[
+        "#06b6d4",
+        "#3b82f6",
+        "#22c55e",
+        "#f59e0b"
+      ]
+    }]
+  }
+});
+
+/* ===== LINE CHART ===== */
+new Chart(document.getElementById("lineChart"),{
+  type:"line",
+  data:{
+    labels:months,
+    datasets:[{
+      label:"Profit",
+      data:profit,
+      borderColor:"#22c55e",
+      tension:0.3
+    }]
+  }
+});
+
+</script>
+
+</body>
+</html>
+{% endblock %}

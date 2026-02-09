@@ -1,0 +1,133 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<!-- BACK BUTTON -->
+<a href="clients" class="btn btn-ghost m-2">← Back to Clients</a>
+
+<!-- CLIENT HEADER -->
+<div class="card p-4 m-4">
+
+  <div class="flex justify-between items-center">
+
+    <div class="flex items-center gap-4">
+
+      <div class="avatar-fallback" style="width:80px;height:80px;font-size:28px;">
+        SC
+      </div>
+
+      <div>
+        <h2 class="text-xl font-bold">Sarah Chen</h2>
+        <span class="badge badge-primary">Active</span>
+        <p class="text-muted-foreground">Chen Design Studio</p>
+      </div>
+
+    </div>
+
+    <button class="btn btn-outline">Edit Client</button>
+
+  </div>
+
+</div>
+
+<!-- 3 COLUMN SECTION -->
+<div class="flex gap-4 m-4">
+
+  <!-- CONTACT INFO -->
+  <div class="card p-4 w-full">
+
+    <h3 class="font-semibold">Contact Info</h3>
+
+    <p class="text-muted-foreground">Email</p>
+    <p>[email protected]</p>
+
+    <p class="text-muted-foreground m-2">Phone</p>
+    <p>+1 987 654 3210</p>
+
+    <p class="text-muted-foreground m-2">Company</p>
+    <p>Chen Design Studio</p>
+
+  </div>
+
+  <!-- REVENUE -->
+  <div class="card p-4 w-full">
+
+    <h3 class="font-semibold">Revenue Summary</h3>
+
+    <p class="text-muted-foreground">Total Revenue</p>
+    <h2 class="text-success">$45,000</h2>
+
+    <p class="text-muted-foreground m-2">Projects</p>
+    <h2>6</h2>
+
+    <p class="text-muted-foreground m-2">Avg. Project Value</p>
+    <h2>$7,500</h2>
+
+  </div>
+
+  <!-- INTERACTIONS -->
+  <div class="card p-4 w-full">
+
+    <h3 class="font-semibold">Recent Interactions</h3>
+
+    <div class="m-2">
+      <b>Kickoff Call</b>
+      <p class="text-muted-foreground">2025-01-10</p>
+    </div>
+
+    <div class="m-2">
+      <b>Proposal Sent</b>
+      <p class="text-muted-foreground">2025-01-18</p>
+    </div>
+
+    <div class="m-2">
+      <b>Feedback Review</b>
+      <p class="text-muted-foreground">2025-01-25</p>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- PROJECTS -->
+<div class="card p-4 m-4">
+
+<h3 class="font-semibold">Projects</h3>
+
+<!-- PROJECT ITEM -->
+<div class="flex justify-between bg-secondary p-4 rounded m-2">
+
+  <div>
+    <b>Website Redesign</b>
+    <p class="text-muted-foreground">Due: 2025-02-20</p>
+  </div>
+
+  <div style="text-align:right;">
+    <b>$12,000</b>
+    <p class="text-muted-foreground">80% complete</p>
+    <span class="badge badge-secondary">ongoing</span>
+  </div>
+
+</div>
+
+<div class="flex justify-between bg-secondary p-4 rounded m-2">
+
+  <div>
+    <b>Brand Kit</b>
+    <p class="text-muted-foreground">Due: 2025-01-15</p>
+  </div>
+
+  <div style="text-align:right;">
+    <b>$5,000</b>
+    <p class="text-muted-foreground">100% complete</p>
+    <span class="badge badge-primary">completed</span>
+  </div>
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>
+{% endblock %}

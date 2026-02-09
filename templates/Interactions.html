@@ -1,0 +1,93 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<!-- HEADER -->
+<div class="flex justify-between items-center m-4">
+  <div>
+    <h1 class="text-2xl font-bold">Interactions</h1>
+    <p class="text-muted-foreground">Track all client communications</p>
+  </div>
+
+  <button class="btn btn-primary">+ Log Interaction</button>
+</div>
+
+<!-- SEARCH -->
+<div class="m-4">
+  <input 
+    type="text"
+    id="search"
+    class="input"
+    placeholder="Search interactions..."
+    onkeyup="searchInteractions()"
+  >
+</div>
+
+<!-- TIMELINE -->
+<div class="m-4">
+
+<!-- DATE GROUP -->
+<h3 class="font-semibold">January 20, 2025</h3>
+
+<div class="card p-4 m-2 interaction" data-text="project kickoff sarah">
+
+  <b>Project Kickoff</b>
+  <p class="text-primary">Sarah Chen</p>
+  <p class="text-muted-foreground">
+    Discussed goals and timeline.
+  </p>
+  <span class="badge badge-secondary">Meeting</span>
+  <p class="text-muted-foreground text-sm">10:00 AM</p>
+
+</div>
+
+<div class="card p-4 m-2 interaction" data-text="proposal marcus">
+
+  <b>Proposal Sent</b>
+  <p class="text-primary">Marcus Lee</p>
+  <p class="text-muted-foreground">
+    Sent pricing proposal.
+  </p>
+  <span class="badge badge-primary">Email</span>
+  <p class="text-muted-foreground text-sm">2:30 PM</p>
+
+</div>
+
+<!-- DATE GROUP -->
+<h3 class="font-semibold m-4">January 18, 2025</h3>
+
+<div class="card p-4 m-2 interaction" data-text="follow up emily">
+
+  <b>Follow-up Call</b>
+  <p class="text-primary">Emily Watson</p>
+  <p class="text-muted-foreground">
+    Checked on campaign results.
+  </p>
+  <span class="badge badge-warning">Call</span>
+  <p class="text-muted-foreground text-sm">4:15 PM</p>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+function searchInteractions(){
+  let input = document.getElementById("search").value.toLowerCase();
+  let items = document.querySelectorAll(".interaction");
+
+  items.forEach(i=>{
+    let text = i.dataset.text;
+
+    if(text.includes(input)){
+      i.style.display="block";
+    } else {
+      i.style.display="none";
+    }
+  });
+}
+</script>
+
+</body>
+</html>
+{% endblock %}

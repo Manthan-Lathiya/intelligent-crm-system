@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>FreelanceFlow</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="app-sidebar">
+    <div class="p-4 text-xl font-bold text-primary">
+      FreelanceFlow
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="dashboard" class="sidebar-nav-item">Dashboard</a>
+      <a href="clients" class="sidebar-nav-item">Clients</a>
+      <a href="interactions" class="sidebar-nav-item">Interactions</a>
+      <a href="projects" class="sidebar-nav-item">Projects</a>
+      <a href="revenue" class="sidebar-nav-item">Revenue</a>
+      <a href="expenses" class="sidebar-nav-item">Expenses</a>
+      <a href="analytics" class="sidebar-nav-item">Analytics</a>
+      <a href="insights" class="sidebar-nav-item">Insights</a>
+      <a href="settings" class="sidebar-nav-item">Settings</a>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-content">
+
+    <!-- HEADER -->
+    <header class="app-header" style="justify-content: flex-end;">
+      <div class="flex gap-3">
+        <div class="avatar">
+          <div class="avatar-fallback me-auto">M</div>
+        </div>
+      </div>
+    </header>
+
+
+{% block content %} {% endblock %}

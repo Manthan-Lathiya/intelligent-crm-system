@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+{% block content %}
+    <!-- KPI CARDS -->
+    <div class="flex gap-4 m-4">
+
+      <div class="card kpi-card p-4 w-full">
+        <p class="text-muted-foreground">Total Revenue</p>
+        <h3 class="text-2xl font-bold text-success">$12,400</h3>
+      </div>
+
+      <div class="card kpi-card p-4 w-full">
+        <p class="text-muted-foreground">Active Clients</p>
+        <h3 class="text-2xl font-bold">18</h3>
+      </div>
+
+      <div class="card kpi-card p-4 w-full">
+        <p class="text-muted-foreground">Pending Invoices</p>
+        <h3 class="text-2xl font-bold text-warning">5</h3>
+      </div>
+
+    </div>
+
+    <!-- TABLE -->
+    <div class="card m-4 p-4">
+
+      <h3 class="text-lg font-semibold m-2">Recent Clients</h3>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Status</th>
+              <th>Revenue</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td>Acme Corp</td>
+              <td><span class="badge badge-primary">Active</span></td>
+              <td>$2,500</td>
+            </tr>
+
+            <tr>
+              <td>Design Studio</td>
+              <td><span class="badge badge-secondary">Ongoing</span></td>
+              <td>$1,800</td>
+            </tr>
+
+            <tr>
+              <td>Startup XYZ</td>
+              <td><span class="badge badge-destructive">Delayed</span></td>
+              <td>$900</td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
+{% endblock %}

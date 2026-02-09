@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<!-- HEADER -->
+<div class="m-4">
+  <h1 class="text-2xl font-bold">Smart Insights</h1>
+  <p class="text-muted-foreground">
+    AI-powered recommendations for your business
+  </p>
+</div>
+
+<!-- INSIGHTS GRID -->
+<div class="flex gap-4 m-4">
+
+<!-- INSIGHT 1 -->
+<div class="card p-4 w-full">
+
+  <div class="flex justify-between">
+    <span class="badge badge-destructive">High priority</span>
+  </div>
+
+  <h3 class="font-semibold m-2">Revenue Growth Opportunity</h3>
+  <p class="text-muted-foreground">
+    Your top client increased spending this quarter. Consider upselling.
+  </p>
+
+  <p class="text-success font-bold m-2">↑ 22%</p>
+
+</div>
+
+<!-- INSIGHT 2 -->
+<div class="card p-4 w-full">
+
+  <div class="flex justify-between">
+    <span class="badge badge-warning">Medium priority</span>
+  </div>
+
+  <h3 class="font-semibold m-2">Client At Risk</h3>
+  <p class="text-muted-foreground">
+    One client hasn’t responded in 30 days.
+  </p>
+
+  <p class="text-destructive font-bold m-2">↓ Engagement</p>
+
+</div>
+
+<!-- INSIGHT 3 -->
+<div class="card p-4 w-full">
+
+  <div class="flex justify-between">
+    <span class="badge badge-secondary">Low priority</span>
+  </div>
+
+  <h3 class="font-semibold m-2">Expense Optimization</h3>
+  <p class="text-muted-foreground">
+    Software costs increased this month.
+  </p>
+
+  <p class="text-warning font-bold m-2">$120 extra</p>
+
+</div>
+
+<!-- INSIGHT 4 -->
+<div class="card p-4 w-full">
+
+  <div class="flex justify-between">
+    <span class="badge badge-primary">Opportunity</span>
+  </div>
+
+  <h3 class="font-semibold m-2">New Market Trend</h3>
+  <p class="text-muted-foreground">
+    Demand for web design is rising.
+  </p>
+
+  <p class="text-success font-bold m-2">↑ High demand</p>
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<!-- HEADER -->
+<div class="flex justify-between items-center m-4">
+  <div>
+    <h1 class="text-2xl font-bold">Expenses</h1>
+    <p class="text-muted-foreground">Track and manage your business expenses</p>
+  </div>
+
+  <button class="btn btn-primary">+ Add Expense</button>
+</div>
+
+<!-- SUMMARY CARDS -->
+<div class="flex gap-4 m-4">
+
+  <div class="card p-4 w-full">
+    <p class="text-muted-foreground">Total This Month</p>
+    <h2 class="text-destructive">$4,200</h2>
+  </div>
+
+  <div class="card p-4 w-full">
+    <p class="text-muted-foreground">Recurring</p>
+    <h2>$2,500</h2>
+  </div>
+
+  <div class="card p-4 w-full">
+    <p class="text-muted-foreground">One-time</p>
+    <h2>$1,700</h2>
+  </div>
+
+</div>
+
+<!-- EXPENSE LIST -->
+<div class="card p-4 m-4">
+
+<h3 class="font-semibold">Recent Expenses</h3>
+
+<!-- ITEM -->
+<div class="flex justify-between bg-secondary p-4 rounded m-2">
+
+  <div>
+    <b>Adobe Subscription</b>
+    <p class="text-muted-foreground">2025-01-05</p>
+  </div>
+
+  <div class="flex gap-3 items-center">
+    <span class="badge badge-primary">Software</span>
+    <span class="badge badge-outline">Recurring</span>
+    <b>$50</b>
+  </div>
+
+</div>
+
+<!-- ITEM -->
+<div class="flex justify-between bg-secondary p-4 rounded m-2">
+
+  <div>
+    <b>Facebook Ads</b>
+    <p class="text-muted-foreground">2025-01-08</p>
+  </div>
+
+  <div class="flex gap-3 items-center">
+    <span class="badge badge-secondary">Marketing</span>
+    <b>$300</b>
+  </div>
+
+</div>
+
+<!-- ITEM -->
+<div class="flex justify-between bg-secondary p-4 rounded m-2">
+
+  <div>
+    <b>Laptop Repair</b>
+    <p class="text-muted-foreground">2025-01-12</p>
+  </div>
+
+  <div class="flex gap-3 items-center">
+    <span class="badge badge-warning">Equipment</span>
+    <b>$450</b>
+  </div>
+
+</div>
+
+<!-- ITEM -->
+<div class="flex justify-between bg-secondary p-4 rounded m-2">
+
+  <div>
+    <b>Co-working Space</b>
+    <p class="text-muted-foreground">2025-01-15</p>
+  </div>
+
+  <div class="flex gap-3 items-center">
+    <span class="badge badge-primary">Office</span>
+    <span class="badge badge-outline">Recurring</span>
+    <b>$200</b>
+  </div>
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>
+{% endblock %}

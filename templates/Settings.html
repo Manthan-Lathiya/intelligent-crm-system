@@ -1,0 +1,104 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div style="max-width: 800px;">
+<h1 class="text-2xl font-bold m-4">Settings</h1>
+<p class="text-muted-foreground m-4">
+Manage your account and preferences
+</p>
+
+<!-- PROFILE -->
+<div class="card p-4 m-4">
+  <h3 class="font-semibold m-2">Profile</h3>
+
+  <label class="label">Full Name</label>
+  <input class="input m-2" value="John Doe">
+
+  <label class="label">Email</label>
+  <input class="input m-2" value="john@freelancer.com">
+
+  <button class="btn btn-primary m-2">Save Changes</button>
+</div>
+
+<!-- NOTIFICATIONS -->
+<div class="card p-4 m-4">
+  <h3 class="font-semibold m-2">Notifications</h3>
+
+  <div class="flex justify-between items-center m-2">
+    <div>
+      <b>Email notifications</b>
+      <p class="text-muted-foreground">Receive updates</p>
+    </div>
+    <label class="switch" data-state="checked">
+      <span class="switch-thumb"></span>
+    </label>
+  </div>
+
+  <div class="flex justify-between items-center m-2">
+    <div>
+      <b>Payment alerts</b>
+      <p class="text-muted-foreground">Notify on payments</p>
+    </div>
+    <label class="switch" data-state="checked">
+      <span class="switch-thumb"></span>
+    </label>
+  </div>
+
+  <div class="flex justify-between items-center m-2">
+    <div>
+      <b>Weekly digest</b>
+      <p class="text-muted-foreground">Weekly summary</p>
+    </div>
+    <label class="switch">
+      <span class="switch-thumb"></span>
+    </label>
+  </div>
+</div>
+
+<!-- APPEARANCE -->
+<div class="card p-4 m-4">
+  <h3 class="font-semibold m-2">Appearance</h3>
+
+  <div class="flex justify-between items-center m-2">
+    <div>
+      <b>Dark Mode</b>
+      <p class="text-muted-foreground">Use dark theme</p>
+    </div>
+    <label class="switch" data-state="checked">
+      <span class="switch-thumb"></span>
+    </label>
+  </div>
+</div>
+
+<!-- DANGER ZONE -->
+<div class="card p-4 m-4 border">
+  <h3 class="font-semibold text-destructive m-2">Danger Zone</h3>
+
+  <div class="flex justify-between items-center m-2">
+    <div>
+      <b>Log out</b>
+      <p class="text-muted-foreground">Sign out of account</p>
+    </div>
+    <a href="landing.html" class="btn btn-outline">
+      Log out
+    </a>
+  </div>
+
+  <hr class="m-2">
+
+  <div class="flex justify-between items-center m-2">
+    <div>
+      <b>Delete Account</b>
+      <p class="text-muted-foreground">Permanent action</p>
+    </div>
+    <button class="btn" style="background:#ef4444;color:white;">
+      Delete
+    </button>
+  </div>
+</div>
+
+</div>
+
+</body>
+</html>
+{% endblock %}

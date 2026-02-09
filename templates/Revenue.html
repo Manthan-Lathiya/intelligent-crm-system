@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+{% block content %}
+
+
+<h1 class="text-2xl font-bold m-4">Revenue Tracker</h1>
+<p class="text-muted-foreground m-4">
+Monitor your income and growth
+</p>
+
+<!-- KPI CARDS -->
+<div class="flex gap-4 m-4">
+
+<div class="card p-4 w-full">
+  <p class="text-muted-foreground">Total Revenue</p>
+  <h2 class="text-2xl font-bold text-success">$48,000</h2>
+  <small>+18% vs last quarter</small>
+</div>
+
+<div class="card p-4 w-full">
+  <p class="text-muted-foreground">Monthly Average</p>
+  <h2 class="text-2xl font-bold">$8,000</h2>
+  <small>+12% vs last quarter</small>
+</div>
+
+<div class="card p-4 w-full">
+  <p class="text-muted-foreground">Active Clients</p>
+  <h2 class="text-2xl font-bold text-primary">6</h2>
+  <small>+8% growth</small>
+</div>
+
+</div>
+
+<!-- SIMPLE CHART -->
+<div class="card p-4 m-4">
+  <h3 class="font-semibold">Revenue Trend</h3>
+
+  <!-- FAKE BAR CHART -->
+  <div class="flex items-end gap-2" style="height:150px;">
+
+    <div style="height:40%;width:30px;background:#06b6d4;"></div>
+    <div style="height:60%;width:30px;background:#06b6d4;"></div>
+    <div style="height:55%;width:30px;background:#06b6d4;"></div>
+    <div style="height:75%;width:30px;background:#06b6d4;"></div>
+    <div style="height:90%;width:30px;background:#06b6d4;"></div>
+    <div style="height:80%;width:30px;background:#06b6d4;"></div>
+
+  </div>
+
+  <div class="flex gap-3 text-sm m-2">
+    <span>Jan</span><span>Feb</span><span>Mar</span>
+    <span>Apr</span><span>May</span><span>Jun</span>
+  </div>
+</div>
+
+<!-- TOP CLIENTS -->
+<div class="card p-4 m-4">
+  <h3 class="font-semibold">Top Clients</h3>
+
+  <div class="flex justify-between m-2">
+    <span>Sarah Chen</span>
+    <b class="text-success">$12,000</b>
+  </div>
+
+  <div class="flex justify-between m-2">
+    <span>Marcus Lee</span>
+    <b class="text-success">$10,000</b>
+  </div>
+
+  <div class="flex justify-between m-2">
+    <span>Emily Watson</span>
+    <b class="text-success">$9,000</b>
+  </div>
+
+  <div class="flex justify-between m-2">
+    <span>Startup XYZ</span>
+    <b class="text-success">$8,000</b>
+  </div>
+
+</div>
+
+</div>
+
+</body>
+</html>
+{% endblock %}
