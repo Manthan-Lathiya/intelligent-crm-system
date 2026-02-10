@@ -2,7 +2,7 @@
 {% block content %}
 
 <!-- BACK BUTTON -->
-<a href="clients" class="btn btn-ghost m-2">← Back to Clients</a>
+<a href="/clients" class="btn btn-ghost m-2">← Back to Clients</a>
 
 <!-- CLIENT HEADER -->
 <div class="card p-4 m-4">
@@ -12,19 +12,14 @@
     <div class="flex items-center gap-4">
 
       <div class="avatar-fallback" style="width:80px;height:80px;font-size:28px;">
-        SC
-      </div>
+  {{ client.avatar }}
+</div>
 
-      <div>
-        <h2 class="text-xl font-bold">Sarah Chen</h2>
-        <span class="badge badge-primary">Active</span>
-        <p class="text-muted-foreground">Chen Design Studio</p>
-      </div>
+<h2 class="text-xl font-bold">{{ client.name }}</h2>
+<span class="badge badge-primary">{{ client.status }}</span>
+<p class="text-muted-foreground">{{ client.company_name }}</p>
 
     </div>
-
-    <button class="btn btn-outline">Edit Client</button>
-
   </div>
 
 </div>
@@ -38,13 +33,14 @@
     <h3 class="font-semibold">Contact Info</h3>
 
     <p class="text-muted-foreground">Email</p>
-    <p>[email protected]</p>
+<p>{{ client.email }}</p>
 
-    <p class="text-muted-foreground m-2">Phone</p>
-    <p>+1 987 654 3210</p>
+<p class="text-muted-foreground m-2">Phone</p>
+<p>{{ client.phone }}</p>
 
-    <p class="text-muted-foreground m-2">Company</p>
-    <p>Chen Design Studio</p>
+<p class="text-muted-foreground m-2">Company</p>
+<p>{{ client.company_name }}</p>
+
 
   </div>
 
@@ -54,35 +50,39 @@
     <h3 class="font-semibold">Revenue Summary</h3>
 
     <p class="text-muted-foreground">Total Revenue</p>
-    <h2 class="text-success">$45,000</h2>
+<h2 class="text-success">${{ revenue }}</h2>
 
-    <p class="text-muted-foreground m-2">Projects</p>
-    <h2>6</h2>
+<p class="text-muted-foreground m-2">Projects</p>
+<h2>{{ projects|length }}</h2>
 
-    <p class="text-muted-foreground m-2">Avg. Project Value</p>
-    <h2>$7,500</h2>
+<p class="text-muted-foreground m-2">Avg Project Value</p>
+<h2>
+  {% if projects|length > 0 %}
+    ${{ revenue // projects|length }}
+  {% else %}
+    $0
+  {% endif %}
+</h2>
+
 
   </div>
 
   <!-- INTERACTIONS -->
   <div class="card p-4 w-full">
 
-    <h3 class="font-semibold">Recent Interactions</h3>
+    {% for i in interactions %}
+<div class="m-2">
+  <b>{{ i.subject }}</b>
+  <p class="text-muted-foreground">
+    {{ i.date.strftime('%d %b %Y') }}
+  </p>
+</div>
+{% else %}
+<p class="text-muted-foreground m-2">
+  No interactions yet
+</p>
+{% endfor %}
 
-    <div class="m-2">
-      <b>Kickoff Call</b>
-      <p class="text-muted-foreground">2025-01-10</p>
-    </div>
-
-    <div class="m-2">
-      <b>Proposal Sent</b>
-      <p class="text-muted-foreground">2025-01-18</p>
-    </div>
-
-    <div class="m-2">
-      <b>Feedback Review</b>
-      <p class="text-muted-foreground">2025-01-25</p>
-    </div>
 
   </div>
 
@@ -94,33 +94,38 @@
 <h3 class="font-semibold">Projects</h3>
 
 <!-- PROJECT ITEM -->
+{% for p in projects %}
 <div class="flex justify-between bg-secondary p-4 rounded m-2">
 
   <div>
-    <b>Website Redesign</b>
-    <p class="text-muted-foreground">Due: 2025-02-20</p>
+    <b>{{ p.name }}</b>
+    <p class="text-muted-foreground">
+      Due: {{ p.due_date.strftime('%d %b %Y') }}
+    </p>
   </div>
 
   <div style="text-align:right;">
-    <b>$12,000</b>
-    <p class="text-muted-foreground">80% complete</p>
-    <span class="badge badge-secondary">ongoing</span>
+    <b>${{ p.budget }}</b>
+    <p class="text-muted-foreground">
+      Spent: ${{ p.spent }}
+    </p>
+
+    <span class="badge
+      {% if p.status == 'Paid' %}badge-success
+      {% elif p.status == 'Completed' %}badge-primary
+      {% elif p.status == 'Ongoing' %}badge-secondary
+      {% else %}badge-outline{% endif %}
+    ">
+      {{ p.status }}
+    </span>
   </div>
 
 </div>
-
-<div class="flex justify-between bg-secondary p-4 rounded m-2">
-
-  <div>
-    <b>Brand Kit</b>
-    <p class="text-muted-foreground">Due: 2025-01-15</p>
-  </div>
-
-  <div style="text-align:right;">
-    <b>$5,000</b>
-    <p class="text-muted-foreground">100% complete</p>
-    <span class="badge badge-primary">completed</span>
-  </div>
+{% else %}
+<p class="text-muted-foreground m-2">
+  No projects yet
+</p>
+{% endfor %}
 
 </div>
 

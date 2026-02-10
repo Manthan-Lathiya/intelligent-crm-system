@@ -6,6 +6,19 @@
 </head>
 
 <body>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div style="margin: 16px;">
+      {% for message in messages %}
+        <div class="alert alert-destructive flash-message">
+          <span>{{ message }}</span>
+          <button class="flash-close" onclick="this.parentElement.remove()">×</button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
 
 <div class="flex" style="min-height:100vh;">
 
@@ -29,34 +42,25 @@
 Start your free trial
 </p>
 
-<form>
+<form action="/signup" method="post">
 
 <label class="label">Full Name</label>
-<input class="input" placeholder="John Doe">
+<input class="input" type="text" name="user_name" placeholder="John Doe">
 
 <label class="label">Email</label>
-<input class="input" placeholder="john@example.com">
+<input class="input" type="text" name="user_email" placeholder="john@example.com">
 
 <label class="label">Password</label>
 <input 
   type="password"
   id="password"
   class="input"
+  name="user_password"
   onkeyup="checkPassword()"
   placeholder="Enter password"
 >
 
-<!-- STRENGTH BAR -->
-<div class="progress m-2">
-  <div id="strengthBar" class="progress-indicator"></div>
-</div>
-
-<!-- REQUIREMENTS -->
-<div id="req1" class="text-sm text-muted-foreground">• 8+ characters</div>
-<div id="req2" class="text-sm text-muted-foreground">• Uppercase letter</div>
-<div id="req3" class="text-sm text-muted-foreground">• Number</div>
-
-<button class="btn btn-primary w-full m-2">
+<button class="btn btn-primary w-full m-2" type="submit">
 Create Account
 </button>
 
@@ -64,7 +68,7 @@ Create Account
 
 <p class="text-sm m-2">
 Already have account?
-<a href="login.html" class="text-primary">Login</a>
+<a href="/login" class="text-primary">Login</a>
 </p>
 
 </div>
@@ -73,26 +77,7 @@ Already have account?
 </div>
 
 <script>
-function checkPassword(){
-  let p = document.getElementById("password").value;
-  let score = 0;
-
-  if(p.length>=8){ req1.style.color="green"; score++; }
-  else{ req1.style.color=""; }
-
-  if(/[A-Z]/.test(p)){ req2.style.color="green"; score++; }
-  else{ req2.style.color=""; }
-
-  if(/[0-9]/.test(p)){ req3.style.color="green"; score++; }
-  else{ req3.style.color=""; }
-
-  let bar = document.getElementById("strengthBar");
-  bar.style.width = (score*33)+"%";
-
-  if(score==1) bar.style.background="red";
-  if(score==2) bar.style.background="orange";
-  if(score==3) bar.style.background="green";
-}
+  
 </script>
 
 </body>

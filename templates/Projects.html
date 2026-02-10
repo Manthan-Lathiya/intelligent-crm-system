@@ -9,71 +9,139 @@
     <p class="text-muted-foreground">Track all your client projects</p>
   </div>
 
-  <button class="btn btn-primary">+ New Project</button>
+  <button class="btn btn-primary" onclick="openProjectModal()">
+  + New Project
+</button>
+
 </div>
 
-<!-- KANBAN BOARD -->
+<div id="projectModal" style="display:none;">
+  <div class="dialog-overlay" onclick="closeProjectModal()"></div>
+
+  <div class="dialog-content">
+
+    <h2 class="text-xl font-bold m-2">New Project</h2>
+
+    <form onsubmit="saveProject(event)">
+
+      <label class="label">Client</label>
+      <select class="input" id="project_client">
+        {% for c in clients %}
+        <option value="{{ c.client_id }}">{{ c.name }}</option>
+        {% endfor %}
+      </select>
+
+      <label class="label">Project Name</label>
+      <input class="input" id="project_name" required>
+
+      <label class="label">Status</label>
+      <select class="input" id="project_status">
+        <option>Proposal</option>
+        <option>Ongoing</option>
+        <option>Paid</option>
+      </select>
+
+      <label class="label">Budget</label>
+      <input type="number" class="input" id="project_budget">
+
+      <label class="label">Spent</label>
+      <input type="number" class="input" id="project_spent" value="0">
+
+      <label class="label">Start Date</label>
+      <input type="date" class="input" id="project_start">
+
+      <label class="label">Due Date</label>
+      <input type="date" class="input" id="project_due">
+
+      <div class="flex gap-3 m-2">
+        <button type="button" class="btn btn-outline"
+          onclick="closeProjectModal()">Cancel</button>
+        <button class="btn btn-primary">Save</button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
 <div class="flex gap-4 m-4">
 
-<!-- PROPOSAL COLUMN -->
+{% for col in ["Proposal","Ongoing"] %}
 <div class="w-full">
-  <h3 class="font-semibold">Proposal</h3>
+  <h3 class="font-semibold">{{ col }}</h3>
 
+  {% for p in projects %}
+  {% if p.status == col %}
   <div class="card p-4 m-2">
-    <b>Website Redesign</b>
-    <p class="text-primary">Sarah Chen</p>
-    <p class="text-muted-foreground">$5,000</p>
-    <p class="text-muted-foreground">Due: Feb 20</p>
-  </div>
-</div>
 
-<!-- ONGOING COLUMN -->
-<div class="w-full">
-  <h3 class="font-semibold">Ongoing</h3>
+    <b>{{ p.name }}</b>
 
-  <div class="card p-4 m-2">
-    <b>Mobile App UI</b>
-    <p class="text-primary">Marcus Lee</p>
-    <p class="text-muted-foreground">$8,000</p>
-    <p class="text-muted-foreground">Due: Mar 10</p>
+    <p class="text-primary">
+      {% for c in clients %}
+        {% if c.client_id == p.p_client_id %}
+          {{ c.name }}
+        {% endif %}
+      {% endfor %}
+    </p>
 
-    <!-- PROGRESS BAR -->
+    <p class="text-muted-foreground">
+      Budget: ${{ p.budget }}
+    </p>
+
+    <p class="text-muted-foreground">
+      Due: {{ p.due_date.strftime('%d %b %Y') }}
+    </p>
+
+    {% if col == "Ongoing" %}
     <div class="progress m-2">
-      <div class="progress-indicator" style="width:70%"></div>
+      <div class="progress-indicator"
+           style="width: {{ (p.spent / p.budget) * 100 }}%">
+      </div>
     </div>
-    <small>70% complete</small>
+    {% endif %}
+
   </div>
-</div>
-
-<!-- COMPLETED COLUMN -->
-<div class="w-full">
-  <h3 class="font-semibold">Completed</h3>
-
-  <div class="card p-4 m-2">
-    <b>Brand Identity</b>
-    <p class="text-primary">Emily Watson</p>
-    <p class="text-muted-foreground">$3,000</p>
-
-    <span class="badge badge-primary">Completed</span>
-  </div>
-</div>
-
-<!-- PAID COLUMN -->
-<div class="w-full">
-  <h3 class="font-semibold">Paid</h3>
-
-  <div class="card p-4 m-2">
-    <b>Landing Page</b>
-    <p class="text-primary">Startup XYZ</p>
-    <p class="text-muted-foreground">$2,500</p>
-
-    <span class="badge badge-success">Paid</span>
-  </div>
-</div>
+  {% endif %}
+  {% endfor %}
 
 </div>
-
+{% endfor %}
 </div>
+
+
+<script>
+function openProjectModal(){
+  document.getElementById("projectModal").style.display="block";
+}
+function closeProjectModal(){
+  document.getElementById("projectModal").style.display="none";
+}
+
+function saveProject(e){
+  e.preventDefault();
+
+  fetch("/add_project",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({
+      client_id: document.getElementById("project_client").value,
+      name: document.getElementById("project_name").value,
+      status: document.getElementById("project_status").value,
+      budget: document.getElementById("project_budget").value,
+      spent: document.getElementById("project_spent").value,
+      start_date: document.getElementById("project_start").value,
+      due_date: document.getElementById("project_due").value
+    })
+  })
+  .then(res=>res.json())
+  .then(d=>{
+    if(d.success){
+      closeProjectModal();
+      location.reload();
+    }
+  });
+}
+</script>
+
 
 </body>
 </html>

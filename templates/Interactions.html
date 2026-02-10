@@ -8,9 +8,11 @@
     <p class="text-muted-foreground">Track all client communications</p>
   </div>
 
-  <button class="btn btn-primary">+ Log Interaction</button>
-</div>
+  <button class="btn btn-primary" onclick="openInteractionModal()">
+  + Log Interaction
+</button>
 
+</div>
 <!-- SEARCH -->
 <div class="m-4">
   <input 
@@ -22,56 +24,174 @@
   >
 </div>
 
-<!-- TIMELINE -->
-<div class="m-4">
+{% for i in interactions %}
 
-<!-- DATE GROUP -->
-<h3 class="font-semibold">January 20, 2025</h3>
+<div class="card p-4 m-4" style="
+  background: linear-gradient(180deg, #0b1730, #0a1428);
+  border-radius: 14px;
+">
 
-<div class="card p-4 m-2 interaction" data-text="project kickoff sarah">
+  <div class="flex items-start gap-3">
 
-  <b>Project Kickoff</b>
-  <p class="text-primary">Sarah Chen</p>
-  <p class="text-muted-foreground">
-    Discussed goals and timeline.
-  </p>
-  <span class="badge badge-secondary">Meeting</span>
-  <p class="text-muted-foreground text-sm">10:00 AM</p>
+    <!-- ICON (based on type) -->
+    <div class="avatar-fallback" style="
+      background:#0f2a44;
+      color:#38bdf8;
+      width:42px;
+      height:42px;
+      font-size:18px;
+    ">
+      {% if i.type == "Email" %}
+        ✉️
+      {% elif i.type == "Call" %}
+        📞
+      {% elif i.type == "Meeting" %}
+        📅
+      {% else %}
+        💬
+      {% endif %}
+    </div>
 
+    <!-- CONTENT -->
+    <div class="w-full">
+
+      <!-- HEADER -->
+      <div class="flex justify-between items-start">
+        <div>
+          <h3 class="font-semibold text-lg">
+            {{ i.subject }}
+          </h3>
+
+          <p class="text-primary text-sm">
+            {% for c in clients %}
+              {% if c.client_id == i.i_client_id %}
+                {{ c.name }}
+              {% endif %}
+            {% endfor %}
+          </p>
+        </div>
+
+        <!-- TYPE BADGE -->
+        <span class="badge badge-secondary">
+          {{ i.type }}
+        </span>
+      </div>
+
+      <!-- SUMMARY -->
+      <p class="text-muted-foreground m-2">
+        {{ i.summary }}
+      </p>
+
+      <!-- TIME / DATE -->
+      <p class="text-muted-foreground text-sm m-2">
+        {{ i.date.strftime('%d %b %Y') }}
+      </p>
+
+    </div>
+
+  </div>
 </div>
 
-<div class="card p-4 m-2 interaction" data-text="proposal marcus">
 
-  <b>Proposal Sent</b>
-  <p class="text-primary">Marcus Lee</p>
-  <p class="text-muted-foreground">
-    Sent pricing proposal.
-  </p>
-  <span class="badge badge-primary">Email</span>
-  <p class="text-muted-foreground text-sm">2:30 PM</p>
+{% endfor %}
 
+
+<div id="interactionModal" style="display:none;">
+
+  <div class="dialog-overlay" onclick="closeInteractionModal()"></div>
+
+  <div class="dialog-content animate-in">
+
+    <h2 id="interactionTitle" class="text-xl font-bold m-2">
+      Log Interaction
+    </h2>
+
+    <form id="interactionForm" onsubmit="saveInteraction(event)">
+      <input type="hidden" id="interaction_id">
+
+      <div class="form-item">
+        <label class="label">Client</label>
+        <select class="input" id="interaction_client" required>
+          {% for c in clients %}
+            <option value="{{ c.client_id }}">{{ c.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-item">
+        <label class="label">Type</label>
+        <select class="input" id="interaction_type">
+          <option>Call</option>
+          <option>Email</option>
+          <option>Meeting</option>
+          <option>WhatsApp</option>
+          <option>Follow-up</option>
+        </select>
+      </div>
+
+      <div class="form-item">
+        <label class="label">Subject</label>
+        <input class="input" id="interaction_subject" required>
+      </div>
+
+      <div class="form-item">
+        <label class="label">Summary</label>
+        <textarea class="input" id="interaction_summary"
+          style="height:auto;" rows="4"></textarea>
+      </div>
+
+      <div class="form-item">
+        <label class="label">Date</label>
+        <input type="date" class="input" id="interaction_date" required>
+      </div>
+
+      <div class="flex justify-between gap-3">
+        <button type="button" class="btn btn-outline"
+          onclick="closeInteractionModal()">Cancel</button>
+        <button class="btn btn-primary">Save Interaction</button>
+      </div>
+    </form>
+
+  </div>
 </div>
-
-<!-- DATE GROUP -->
-<h3 class="font-semibold m-4">January 18, 2025</h3>
-
-<div class="card p-4 m-2 interaction" data-text="follow up emily">
-
-  <b>Follow-up Call</b>
-  <p class="text-primary">Emily Watson</p>
-  <p class="text-muted-foreground">
-    Checked on campaign results.
-  </p>
-  <span class="badge badge-warning">Call</span>
-  <p class="text-muted-foreground text-sm">4:15 PM</p>
-
-</div>
-
 </div>
 
 </div>
 
 <script>
+  function openInteractionModal(){
+    document.getElementById("interactionForm").reset();
+    document.getElementById("interactionModal").style.display = 'block';
+  }
+  function closeInteractionModal(){
+    document.getElementById("interactionModal").style.display = "none";
+  }
+
+  function saveInteraction(e){
+  e.preventDefault();
+
+  const payload = {
+    client_id: document.getElementById('interaction_client').value,
+    type: document.getElementById('interaction_type').value,
+    subject: document.getElementById('interaction_subject').value,
+    summary: document.getElementById('interaction_summary').value,
+    date: document.getElementById('interaction_date').value
+  };
+
+  fetch("/add_interaction", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  })
+  .then(res => res.json())
+  .then(data => {
+    if(data.success){
+      closeInteractionModal();
+      location.reload(); 
+    }
+  });
+}
+
 function searchInteractions(){
   let input = document.getElementById("search").value.toLowerCase();
   let items = document.querySelectorAll(".interaction");

@@ -6,38 +6,104 @@
 </head>
 <body>
 
+  <script>
+function toggleSidebar() {
+  document.querySelector(".app-sidebar").classList.toggle("collapsed");
+  document.querySelector(".main-content").classList.toggle("sidebar-collapsed");
+}
+
+function toggleProfileMenu() {
+  document.getElementById("profileMenu").classList.toggle("show");
+}
+
+// Close dropdown when clicking outside
+document.addEventListener("click", function(e) {
+  const menu = document.getElementById("profileMenu");
+  const btn = document.querySelector(".profile-btn");
+
+  if (!menu.contains(e.target) && !btn.contains(e.target)) {
+    menu.classList.remove("show");
+  }
+});
+</script>
+
 <div class="app-layout">
 
   <!-- SIDEBAR -->
   <aside class="app-sidebar">
-    <div class="p-4 text-xl font-bold text-primary">
-      FreelanceFlow
+    <div class="flex">
+      <div class="brand p-4 text-xl font-bold text-primary">
+        FreelanceFlow
+      </div>
+      <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
     </div>
 
     <nav class="sidebar-nav">
-      <a href="dashboard" class="sidebar-nav-item">Dashboard</a>
-      <a href="clients" class="sidebar-nav-item">Clients</a>
-      <a href="interactions" class="sidebar-nav-item">Interactions</a>
-      <a href="projects" class="sidebar-nav-item">Projects</a>
-      <a href="revenue" class="sidebar-nav-item">Revenue</a>
-      <a href="expenses" class="sidebar-nav-item">Expenses</a>
-      <a href="analytics" class="sidebar-nav-item">Analytics</a>
-      <a href="insights" class="sidebar-nav-item">Insights</a>
-      <a href="settings" class="sidebar-nav-item">Settings</a>
+      <a href="dashboard" class="sidebar-nav-item">
+        <span class="icon">📊</span>
+        <span class="label">Dashboard</span>
+      </a>
+      <a href="clients" class="sidebar-nav-item">
+        <span class="icon">👥</span>
+        <span class="label">Clients</span>
+      </a>
+      <a href="interactions" class="sidebar-nav-item">
+        <span class="label">Interactions</span>
+      </a>
+      <a href="projects" class="sidebar-nav-item">
+        <span class="icon">📁</span>
+    <span class="label">Projects</span>
+      </a>
+      <a href="revenue" class="sidebar-nav-item">
+        <span class="label">Revenue</span>
+      </a>
+      <a href="expenses" class="sidebar-nav-item">
+        <span class="label">Expense</span>
+      </a>
+      <a href="analytics" class="sidebar-nav-item">
+        <span class="label">Analytics</span>
+      </a>
+      <!-- <a href="insights" class="sidebar-nav-item">Insights</a> -->
+      <a href="settings" class="sidebar-nav-item">
+        <span class="label">Settings</span>
+      </a>
     </nav>
   </aside>
 
   <!-- MAIN -->
   <div class="main-content">
 
-    <!-- HEADER -->
-    <header class="app-header" style="justify-content: flex-end;">
-      <div class="flex gap-3">
-        <div class="avatar">
-          <div class="avatar-fallback me-auto">M</div>
+    <div class="profile-wrapper">
+
+  <div class="profile-btn" onclick="toggleProfileMenu()">
+    <div class="avatar-fallback">M</div>
+  </div>
+
+  <div id="profileMenu" class="profile-menu">
+    <div class="profile-info">
+      <strong>{{ session['user_name'] }}</strong>
+      <small>{{ session['user_email'] }}</small>
+    </div>
+
+    <a href="/settings" class="profile-item">⚙ Settings</a>
+    <a href="/logout" class="profile-item logout">⎋ Log out</a>
+  </div>
+
+</div>
+
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div style="margin: 16px;">
+      {% for message in messages %}
+        <div class="alert alert-destructive flash-message">
+          <span>{{ message }}</span>
+          <button class="flash-close" onclick="this.parentElement.remove()">×</button>
         </div>
-      </div>
-    </header>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
 
 
 {% block content %} {% endblock %}

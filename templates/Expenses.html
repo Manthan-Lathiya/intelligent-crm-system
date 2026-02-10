@@ -8,25 +8,50 @@
     <p class="text-muted-foreground">Track and manage your business expenses</p>
   </div>
 
-  <button class="btn btn-primary">+ Add Expense</button>
+  <button class="btn btn-primary" onclick="openExpenseModal()">
+  + Add Expense
+</button>
 </div>
+
+<div id="expenseModal" style="display:none;">
+  <div class="dialog-overlay" onclick="closeExpenseModal()"></div>
+
+  <div class="dialog-content">
+    <h2 class="text-xl font-bold">Add Expense</h2>
+
+    <form onsubmit="saveExpense(event)">
+      <input class="input" id="expense_title" placeholder="Title" required>
+
+      <select class="input" id="expense_category">
+        <option>Software</option>
+        <option>Marketing</option>
+        <option>Office</option>
+        <option>Equipment</option>
+        <option>Other</option>
+      </select>
+
+      <input type="number" class="input" id="expense_amount" placeholder="Amount" required>
+      <input type="date" class="input" id="expense_date" required>
+
+      <div class="flex gap-3 m-2">
+        <button type="button" class="btn btn-outline"
+          onclick="closeExpenseModal()">Cancel</button>
+        <button class="btn btn-primary">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 
 <!-- SUMMARY CARDS -->
 <div class="flex gap-4 m-4">
 
   <div class="card p-4 w-full">
-    <p class="text-muted-foreground">Total This Month</p>
-    <h2 class="text-destructive">$4,200</h2>
-  </div>
+    <h2 class="text-destructive text-2xl font-bold">
+  ${{ total_expenses }}
+</h2>
+<p class="text-muted-foreground">Total Expenses</p>
 
-  <div class="card p-4 w-full">
-    <p class="text-muted-foreground">Recurring</p>
-    <h2>$2,500</h2>
-  </div>
-
-  <div class="card p-4 w-full">
-    <p class="text-muted-foreground">One-time</p>
-    <h2>$1,700</h2>
   </div>
 
 </div>
@@ -36,71 +61,53 @@
 
 <h3 class="font-semibold">Recent Expenses</h3>
 
-<!-- ITEM -->
+{% for e in expenses %}
 <div class="flex justify-between bg-secondary p-4 rounded m-2">
-
   <div>
-    <b>Adobe Subscription</b>
-    <p class="text-muted-foreground">2025-01-05</p>
+    <b>{{ e.title }}</b>
+    <p class="text-muted-foreground">
+      {{ e.category }} • {{ e.date.strftime('%d %b %Y') }}
+    </p>
   </div>
-
-  <div class="flex gap-3 items-center">
-    <span class="badge badge-primary">Software</span>
-    <span class="badge badge-outline">Recurring</span>
-    <b>$50</b>
-  </div>
-
+  <b class="text-destructive">${{ e.amount }}</b>
 </div>
-
-<!-- ITEM -->
-<div class="flex justify-between bg-secondary p-4 rounded m-2">
-
-  <div>
-    <b>Facebook Ads</b>
-    <p class="text-muted-foreground">2025-01-08</p>
-  </div>
-
-  <div class="flex gap-3 items-center">
-    <span class="badge badge-secondary">Marketing</span>
-    <b>$300</b>
-  </div>
-
-</div>
-
-<!-- ITEM -->
-<div class="flex justify-between bg-secondary p-4 rounded m-2">
-
-  <div>
-    <b>Laptop Repair</b>
-    <p class="text-muted-foreground">2025-01-12</p>
-  </div>
-
-  <div class="flex gap-3 items-center">
-    <span class="badge badge-warning">Equipment</span>
-    <b>$450</b>
-  </div>
-
-</div>
-
-<!-- ITEM -->
-<div class="flex justify-between bg-secondary p-4 rounded m-2">
-
-  <div>
-    <b>Co-working Space</b>
-    <p class="text-muted-foreground">2025-01-15</p>
-  </div>
-
-  <div class="flex gap-3 items-center">
-    <span class="badge badge-primary">Office</span>
-    <span class="badge badge-outline">Recurring</span>
-    <b>$200</b>
-  </div>
+{% endfor %}
 
 </div>
 
 </div>
 
-</div>
+<script>
+function openExpenseModal(){
+  document.getElementById("expenseModal").style.display="block";
+}
+function closeExpenseModal(){
+  document.getElementById("expenseModal").style.display="none";
+}
+
+function saveExpense(e){
+  e.preventDefault();
+
+  fetch("/add_expense",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({
+      title: document.getElementById("expense_title").value,
+      category: document.getElementById("expense_category").value,
+      amount: document.getElementById("expense_amount").value,
+      date: document.getElementById("expense_date").value
+    })
+  })
+  .then(r=>r.json())
+  .then(d=>{
+    if(d.success){
+      closeExpenseModal();
+      location.reload();
+    }
+  });
+}
+</script>
+
 
 </body>
 </html>

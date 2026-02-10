@@ -25,100 +25,140 @@
 <!-- CLIENT GRID -->
 <div class="flex gap-4 m-4" id="clientGrid">
 
-<!-- CLIENT CARD -->
-<div class="card p-4 w-full client" data-name="sarah chen" data-email="[email protected]">
-
-  <div class="flex justify-between">
-
-    <div class="flex gap-3">
-      <div class="avatar-fallback">SC</div>
-      <div>
-        <b>Sarah Chen</b>
-        <p class="text-muted-foreground">Chen Studio</p>
-      </div>
-    </div>
-
-    <span class="badge badge-primary">Active</span>
-  </div>
-
-  <p class="text-muted-foreground m-2">[email protected]</p>
-  <p class="text-muted-foreground">+1 987 654 3210</p>
-<hr>
-  <div class="flex justify-between m-2" style="align-content: end;">
-    <b>$45,000</b>
-    <a href="client_profile" class="btn btn-ghost">View</a>
-  </div>
-
-</div>
-
-<!-- CARD 2 -->
-<div class="card p-4 w-full client" data-name="marcus lee" data-email="[email protected]">
-
+  {% for c in clients %}
+<div class="card p-4 w-full client">
   <div class="flex justify-between">
     <div class="flex gap-3">
-      <div class="avatar-fallback">ML</div>
+      <div class="avatar-fallback">
+        {{ c.avatar }}
+      </div>
       <div>
-        <b>Marcus Lee</b>
-        <p class="text-muted-foreground">DevWorks</p>
+        <b>{{ c.name }}</b>
+        <p class="text-muted-foreground">{{ c.company_name }}</p>
+        <span class="badge badge-primary">{{ c.status }}</span>
       </div>
     </div>
-
-    <span class="badge badge-secondary">Inactive</span>
   </div>
 
-  <p class="text-muted-foreground m-2">[email protected]</p>
-  <p class="text-muted-foreground">+1 222 333 4444</p>
+
+  <p class="text-muted-foreground m-2">{{ c.email }}</p>
+  <p class="text-muted-foreground">{{ c.phone }}</p>
 
   <div class="flex justify-between m-2">
-    <b>$12,000</b>
-    <a href="client_profile" class="btn btn-ghost">View</a>
+    <b>${{ c.total_revenue }}</b>
+    <a href="client/{{ c.client_id }}" class="btn btn-ghost">View</a>
   </div>
+</div>
+{% endfor %}
+
 
 </div>
 
-<!-- CARD 3 -->
-<div class="card p-4 w-full client" data-name="emily watson" data-email="[email protected]">
+<!-- ADD CLIENT MODAL -->
+<div id="clientModal" style="display:none;">
 
-  <div class="flex justify-between">
-    <div class="flex gap-3">
-      <div class="avatar-fallback">EW</div>
-      <div>
-        <b>Emily Watson</b>
-        <p class="text-muted-foreground">Marketing Co</p>
+  <div class="dialog-overlay" onclick="closeClientModal()"></div>
+
+  <div class="dialog-content animate-in">
+
+    <h2 class="text-xl font-bold m-2">Add Client</h2>
+
+    <form id="clientForm" onsubmit="saveClient(event)">
+
+      <div class="form-item">
+        <label class="label">Client Name</label>
+        <input class="input" id="client_name" required>
       </div>
-    </div>
 
-    <span class="badge badge-warning">At Risk</span>
+      <div class="form-item">
+        <label class="label">Email</label>
+        <input type="email" class="input" id="client_email" required>
+      </div>
+
+      <div class="form-item">
+        <label class="label">Phone</label>
+        <input class="input" id="client_phone" required>
+      </div>
+
+      <div class="form-item">
+        <label class="label">Company Name</label>
+        <input class="input" id="company_name">
+      </div>
+
+      <div class="form-item">
+        <label class="label">Status</label>
+        <select class="input" id="status">
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+      </div>
+
+      <div class="form-item">
+        <label class="label">Total Revenue</label>
+        <input type="number" class="input" id="total_revenue" value="0">
+      </div>
+
+      <div class="flex justify-between gap-3 m-2">
+        <button type="button" class="btn btn-outline" onclick="closeClientModal()">Cancel</button>
+        <button class="btn btn-primary">Save Client</button>
+      </div>
+
+    </form>
+
   </div>
-
-  <p class="text-muted-foreground m-2">[email protected]</p>
-  <p class="text-muted-foreground">+1 555 666 7777</p>
-
-  <div class="flex justify-between m-2">
-    <b>$27,500</b>
-    <a href="client_profile" class="btn btn-ghost">View</a>
-  </div>
-
 </div>
 
-</div>
-</div>
 
 <script>
-function searchClients(){
-  let input = document.getElementById("search").value.toLowerCase();
-  let clients = document.querySelectorAll(".client");
+  function add_client(){
+    document.getElementById("clientModal").style.display = "block";
+  }
 
-  clients.forEach(c=>{
-    let name = c.dataset.name;
-    let email = c.dataset.email;
+  function closeClientModal(){
+    document.getElementById("clientModal").style.display = "none";
+  }
 
-    if(name.includes(input) || email.includes(input)){
-      c.style.display="block";
-    } else {
-      c.style.display="none";
+  function saveClient(e){
+  e.preventDefault();
+
+  fetch("/add_client", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      name: document.getElementById("client_name").value,
+      email: document.getElementById("client_email").value,
+      phone: document.getElementById("client_phone").value,
+      company: document.getElementById("company_name").value,
+      status: document.getElementById("status").value,
+      revenue: document.getElementById("total_revenue").value
+    })
+
+  })
+  .then(res => res.json())
+  .then(data => {
+    if(data.success){
+      alert("Client saved successfully");
+      closeClientModal();
+      location.reload(); 
     }
   });
+}
+  function searchClients(){
+    let input = document.getElementById("search").value.toLowerCase();
+    let clients = document.querySelectorAll(".client");
+
+    clients.forEach(c=>{
+      let name = c.dataset.name;
+      let email = c.dataset.email;
+
+      if(name.includes(input) || email.includes(input)){
+        c.style.display="block";
+      } else {
+        c.style.display="none";
+      }
+    });
 }
 </script>
 

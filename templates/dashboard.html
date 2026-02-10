@@ -1,62 +1,65 @@
 {% extends "layout.html" %}
 {% block content %}
+  <h1 class="text-2xl font-bold m-4">Dashboard</h1>
+<p class="text-muted-foreground m-4">
+Welcome back, {{session['user_name']}}! Here's your business overview.
+</p>
+
     <!-- KPI CARDS -->
     <div class="flex gap-4 m-4">
 
       <div class="card kpi-card p-4 w-full">
-        <p class="text-muted-foreground">Total Revenue</p>
-        <h3 class="text-2xl font-bold text-success">$12,400</h3>
-      </div>
+    <p class="text-muted-foreground">Total Revenue</p>
+    <h3 class="text-2xl font-bold text-success">
+      ${{ total_revenue }}
+    </h3>
+  </div>
 
       <div class="card kpi-card p-4 w-full">
-        <p class="text-muted-foreground">Active Clients</p>
-        <h3 class="text-2xl font-bold">18</h3>
-      </div>
+    <p class="text-muted-foreground">Total Expenses</p>
+    <h3 class="text-2xl font-bold text-destructive">
+      ${{ total_expenses }}
+    </h3>
+  </div>
 
-      <div class="card kpi-card p-4 w-full">
-        <p class="text-muted-foreground">Pending Invoices</p>
-        <h3 class="text-2xl font-bold text-warning">5</h3>
-      </div>
+     <div class="card kpi-card p-4 w-full">
+    <p class="text-muted-foreground">Profit</p>
+    <h3 class="text-2xl font-bold
+      {% if profit >= 0 %}text-success{% else %}text-destructive{% endif %}">
+      ${{ profit }}
+    </h3>
+  </div>
 
     </div>
 
-    <!-- TABLE -->
-    <div class="card m-4 p-4">
+    <div class="flex gap-4 m-4">
 
-      <h3 class="text-lg font-semibold m-2">Recent Clients</h3>
+  <!-- Total Clients -->
+  <div class="card kpi-card p-4 w-full">
+    <p class="text-muted-foreground">Total Clients</p>
+    <h3 class="text-2xl font-bold">
+      {{ total_clients }}
+    </h3>
+  </div>
 
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Status</th>
-              <th>Revenue</th>
-            </tr>
-          </thead>
+  <!-- Paying Clients -->
+  <div class="card kpi-card p-4 w-full">
+    <p class="text-muted-foreground">Paying Clients</p>
+    <h3 class="text-2xl font-bold text-primary">
+      {{ paying_clients }}
+    </h3>
+  </div>
 
-          <tbody>
-            <tr>
-              <td>Acme Corp</td>
-              <td><span class="badge badge-primary">Active</span></td>
-              <td>$2,500</td>
-            </tr>
+  <!-- Pending Projects -->
+  <div class="card kpi-card p-4 w-full">
+    <p class="text-muted-foreground">Pending Projects</p>
+    <h3 class="text-2xl font-bold text-warning">
+      {{ pending_projects }}
+    </h3>
+  </div>
 
-            <tr>
-              <td>Design Studio</td>
-              <td><span class="badge badge-secondary">Ongoing</span></td>
-              <td>$1,800</td>
-            </tr>
+</div>
 
-            <tr>
-              <td>Startup XYZ</td>
-              <td><span class="badge badge-destructive">Delayed</span></td>
-              <td>$900</td>
-            </tr>
-
-          </tbody>
-        </table>
-      </div>
 
     </div>
 
