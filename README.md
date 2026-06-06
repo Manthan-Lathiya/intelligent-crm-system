@@ -182,8 +182,6 @@ http://127.0.0.1:5000
 
 ![Analytics](screenshots/Analytics.png)
 
-> Replace screenshot filenames with your actual images.
-
 ---
 
 ## Future Improvements
