@@ -101,7 +101,7 @@ Smart-CRM-System/
 ### 1. Clone Repository
 
 ```bash
-git clone https://github.com/yourusername/Smart-CRM-System.git
+git clone https://github.com/Manthan-lathiya/Smart-CRM-System.git
 
 cd Smart-CRM-System
 ```
@@ -218,7 +218,7 @@ This project is licensed under the MIT License.
 
 ## Author
 
-**Manthan**
+**Manthan Lathiya**
 
 GitHub: https://github.com/Manthan-Lathiya
 
