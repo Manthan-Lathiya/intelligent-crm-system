@@ -1,85 +1,115 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<!-- HEADER -->
 <div class="m-4">
   <h1 class="text-2xl font-bold">Smart Insights</h1>
   <p class="text-muted-foreground">
-    AI-powered recommendations for your business
+    Data-driven business intelligence
   </p>
 </div>
 
-<!-- INSIGHTS GRID -->
-<div class="flex gap-4 m-4">
+<div class="analytics-grid">
 
-<!-- INSIGHT 1 -->
-<div class="card p-4 w-full">
+  <!-- Expense Insight -->
+  <div class="card p-6 kpi-card">
+    <span class="badge badge-{{ insights.expense.priority }}">
+      {{ insights.expense.priority|capitalize }} Priority
+    </span>
 
-  <div class="flex justify-between">
-    <span class="badge badge-destructive">High priority</span>
+    <h3 class="m-2">Expense Growth</h3>
+    <p class="text-muted-foreground">
+      {{ ai.expense_summary }}
+    </p>
+
+    <h2 class="text-2xl font-bold m-2">
+      {{ insights.expense.percentage_change }}%
+    </h2>
+
+    <p class="text-muted-foreground text-sm">
+      {{ insights.expense.previous_month }} → {{ insights.expense.last_month }}
+    </p>
   </div>
 
-  <h3 class="font-semibold m-2">Revenue Growth Opportunity</h3>
-  <p class="text-muted-foreground">
-    Your top client increased spending this quarter. Consider upselling.
-  </p>
+  <!-- Profit Insight -->
+  <div class="card p-6 kpi-card">
+    <span class="badge badge-{{ insights.profit.priority }}">
+      {{ insights.profit.priority|capitalize }} Priority
+    </span>
 
-  <p class="text-success font-bold m-2">↑ 22%</p>
+    <h3 class="m-2">Profit Margin</h3>
+    <p class="text-muted-foreground">
+      {{ ai.profit_summary }}
+    </p>
 
-</div>
+    <h2 class="text-2xl font-bold m-2">
+      {{ insights.profit.margin_percent }}%
+    </h2>
 
-<!-- INSIGHT 2 -->
-<div class="card p-4 w-full">
-
-  <div class="flex justify-between">
-    <span class="badge badge-warning">Medium priority</span>
+    <p class="text-muted-foreground text-sm">
+      Revenue: ${{ insights.profit.total_revenue }}
+      • Expenses: ${{ insights.profit.total_expenses }}
+    </p>
   </div>
 
-  <h3 class="font-semibold m-2">Client At Risk</h3>
-  <p class="text-muted-foreground">
-    One client hasn’t responded in 30 days.
-  </p>
+  <!-- Client Dependency -->
+  <div class="card p-6 kpi-card">
+    <span class="badge badge-{{ insights.dependency.priority }}">
+      {{ insights.dependency.priority|capitalize }} Priority
+    </span>
 
-  <p class="text-destructive font-bold m-2">↓ Engagement</p>
+    <h3 class="m-2">Revenue Dependency</h3>
+    <p class="text-muted-foreground">
+      {{ ai.dependency_summary }}
+    </p>
 
-</div>
+    <h2 class="text-2xl font-bold m-2">
+      {{ insights.dependency.dependency_percent }}%
+    </h2>
 
-<!-- INSIGHT 3 -->
-<div class="card p-4 w-full">
-
-  <div class="flex justify-between">
-    <span class="badge badge-secondary">Low priority</span>
+    <p class="text-muted-foreground text-sm">
+      Top Client: {{ insights.dependency.top_client_name }}
+    </p>
   </div>
 
-  <h3 class="font-semibold m-2">Expense Optimization</h3>
-  <p class="text-muted-foreground">
-    Software costs increased this month.
-  </p>
+  <!-- Client Risk -->
+  <div class="card p-6 kpi-card full-width">
+    <h3 class="m-2">Clients At Risk</h3>
+    <p class="text-muted-foreground">
+      {{ ai.client_risk_summary }}
+    </p>
 
-  <p class="text-warning font-bold m-2">$120 extra</p>
-
-</div>
-
-<!-- INSIGHT 4 -->
-<div class="card p-4 w-full">
-
-  <div class="flex justify-between">
-    <span class="badge badge-primary">Opportunity</span>
+    {% if insights.client_risk %}
+      <div class="table-container m-2">
+        <table>
+          <thead>
+            <tr>
+              <th>Client</th>
+              <th>Days Inactive</th>
+              <th>Risk Score</th>
+              <th>Priority</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for client in insights.client_risk %}
+            <tr>
+              <td>{{ client.client_name }}</td>
+              <td>{{ client.days_inactive }}</td>
+              <td>{{ client.risk_score }}</td>
+              <td>
+                <span class="badge badge-{{ client.priority }}">
+                  {{ client.priority|capitalize }}
+                </span>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="text-success m-2">No risky clients detected.</p>
+    {% endif %}
   </div>
 
-  <h3 class="font-semibold m-2">New Market Trend</h3>
-  <p class="text-muted-foreground">
-    Demand for web design is rising.
-  </p>
-
-  <p class="text-success font-bold m-2">↑ High demand</p>
-
 </div>
 
-</div>
-
-</div>
-
-</body>
-</html>
 {% endblock %}

@@ -3,6 +3,8 @@
 <head>
   <title>Login - FreelanceFlow</title>
   <link rel="stylesheet" href="/static/styles.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+
 </head>
 
 <body>
@@ -27,9 +29,9 @@
     <div style="max-width:400px; width:100%;">
 
       <!-- LOGO -->
-      <div class="flex items-center gap-2 m-4">
+      <div class="flex items-center gap-2 m-6" style="padding-right: 90px;">
         <div class="avatar-fallback">⚡</div>
-        <h2 class="font-bold">FreelanceFlow</h2>
+        <h2 class="font-bold ">FreelanceFlow</h2>
       </div>
 
       <h1 class="text-2xl font-bold m-2">Welcome back</h1>
@@ -48,7 +50,6 @@
         <div class="form-item">
           <div class="flex justify-between">
             <label class="label">Password</label>
-            <a href="#" class="text-sm text-primary">Forgot?</a>
           </div>
           <input class="input" name="user_password" type="password" placeholder="••••••" required>
         </div>
@@ -61,14 +62,14 @@
 
       <p class="text-sm text-muted-foreground m-4">
         Don't have an account?
-        <a href="/signup" class="text-primary">Sign up</a>
+        <a href="signup" class="text-primary">Sign up</a>
       </p>
 
     </div>
   </div>
 
   <!-- RIGHT PANEL -->
-  <div class="flex items-center w-full bg-secondary" style="justify-content: center;">
+  <div class="flex items-center w-full bg-secondary justify-center">
 
     <div style="text-align:center; max-width:300px;">
       <div class="avatar-fallback" style="width:80px;height:80px;font-size:30px;margin:auto;">

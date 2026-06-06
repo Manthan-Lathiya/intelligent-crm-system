@@ -3,6 +3,8 @@
 <head>
   <title>FreelanceFlow</title>
   <link rel="stylesheet" href="/static/styles.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp" />
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
 
@@ -31,42 +33,77 @@ document.addEventListener("click", function(e) {
 
   <!-- SIDEBAR -->
   <aside class="app-sidebar">
-    <div class="flex">
+    <div class="sidebar-header">
       <div class="brand p-4 text-xl font-bold text-primary">
         FreelanceFlow
       </div>
-      <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+      <button class="sidebar-toggle" onclick="toggleSidebar()"><span class="material-symbols-sharp">
+menu
+</span></button>
     </div>
 
     <nav class="sidebar-nav">
       <a href="dashboard" class="sidebar-nav-item">
-        <span class="icon">📊</span>
+        <span class="icon"><span class="material-symbols-sharp">
+dashboard
+</span></span>
         <span class="label">Dashboard</span>
       </a>
       <a href="clients" class="sidebar-nav-item">
-        <span class="icon">👥</span>
+        <span class="icon"><span class="material-symbols-sharp">
+group
+</span></span>
         <span class="label">Clients</span>
       </a>
       <a href="interactions" class="sidebar-nav-item">
+        <span class="icon"><span class="material-symbols-sharp">
+chat
+</span></span>
         <span class="label">Interactions</span>
       </a>
       <a href="projects" class="sidebar-nav-item">
-        <span class="icon">📁</span>
-    <span class="label">Projects</span>
+        <span class="icon"><span class="material-symbols-sharp">
+assignment
+</span></span>
+        <span class="label">Projects</span>
       </a>
       <a href="revenue" class="sidebar-nav-item">
+        <span class="icon"><span class="material-symbols-sharp">
+attach_money
+</span></span>
         <span class="label">Revenue</span>
       </a>
       <a href="expenses" class="sidebar-nav-item">
+        <span class="icon"><span class="material-symbols-sharp">
+receipt_long
+</span></span>
         <span class="label">Expense</span>
       </a>
       <a href="analytics" class="sidebar-nav-item">
+        <span class="icon"><span class="material-symbols-sharp">
+bar_chart
+</span></span>
         <span class="label">Analytics</span>
       </a>
-      <!-- <a href="insights" class="sidebar-nav-item">Insights</a> -->
+      <a href="insights" class="sidebar-nav-item">
+        <span class="icon"><span class="material-symbols-sharp">
+network_intelligence
+</span></span>
+        <span class="label">Insights</span>
+      </a>
+      <a href="reports" class="sidebar-nav-item">
+        <span class="icon"><span class="material-symbols-sharp">
+note_stack
+</span></span>
+        <span class="label">Reports</span>
+      </a>
       <a href="settings" class="sidebar-nav-item">
+        <span class="icon"><span class="material-symbols-sharp">
+settings
+</span></span>
         <span class="label">Settings</span>
       </a>
+
     </nav>
   </aside>
 
@@ -75,8 +112,8 @@ document.addEventListener("click", function(e) {
 
     <div class="profile-wrapper">
 
-  <div class="profile-btn" onclick="toggleProfileMenu()">
-    <div class="avatar-fallback">M</div>
+  <div class="profile-btn">
+    <div class="avatar-fallback" onclick="toggleProfileMenu()" >{{ session['user_name'][0] }}</div>
   </div>
 
   <div id="profileMenu" class="profile-menu">
@@ -89,7 +126,7 @@ document.addEventListener("click", function(e) {
     <a href="/logout" class="profile-item logout">⎋ Log out</a>
   </div>
 
-</div>
+</div> <br> <hr>
 
 
 {% with messages = get_flashed_messages() %}

@@ -42,13 +42,13 @@
       font-size:18px;
     ">
       {% if i.type == "Email" %}
-        ✉️
+        <span class="material-symbols-sharp">mail</span>
       {% elif i.type == "Call" %}
-        📞
+        <span class="material-symbols-sharp">call</span>
       {% elif i.type == "Meeting" %}
-        📅
+        <span class="material-symbols-sharp">calendar_month</span>
       {% else %}
-        💬
+        <span class="material-symbols-sharp">chat_bubble</span>
       {% endif %}
     </div>
 
@@ -124,8 +124,6 @@
           <option>Call</option>
           <option>Email</option>
           <option>Meeting</option>
-          <option>WhatsApp</option>
-          <option>Follow-up</option>
         </select>
       </div>
 

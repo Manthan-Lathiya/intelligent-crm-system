@@ -20,18 +20,29 @@
     <h2 class="text-xl font-bold">Add Expense</h2>
 
     <form onsubmit="saveExpense(event)">
-      <input class="input" id="expense_title" placeholder="Title" required>
+      <div class="form-item">
 
-      <select class="input" id="expense_category">
-        <option>Software</option>
-        <option>Marketing</option>
-        <option>Office</option>
-        <option>Equipment</option>
-        <option>Other</option>
-      </select>
+        <input class="input" id="expense_title" placeholder="Title" required>
+      </div>
 
-      <input type="number" class="input" id="expense_amount" placeholder="Amount" required>
-      <input type="date" class="input" id="expense_date" required>
+      <div class="form-item">
+
+        <select class="input" id="expense_category">
+          <option>Software</option>
+          <option>Marketing</option>
+          <option>Office</option>
+          <option>Equipment</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div class="form-item">
+        <input type="number" class="input" id="expense_amount" placeholder="Amount" required>
+      </div>
+
+      <div class="form-item">
+        <input type="date" class="input" id="expense_date" required>
+      </div>
 
       <div class="flex gap-3 m-2">
         <button type="button" class="btn btn-outline"

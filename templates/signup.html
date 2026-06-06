@@ -3,6 +3,8 @@
 <head>
   <title>Signup</title>
   <link rel="stylesheet" href="/static/styles.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  
 </head>
 
 <body>
@@ -24,7 +26,12 @@
 
 <!-- LEFT VISUAL -->
 <div class="flex items-center justify-center w-full bg-secondary">
-  <div style="text-align:center;">
+  <div class="text-center" style="max-width: 300px;">
+
+    <div class="flex items-center gap-2 m-6" style="padding-right: 50px;">
+      <div class="avatar-fallback">⚡</div>
+      <h2 class="font-bold" style="font-size: large;">FreelanceFlow</h2>
+    </div>
     <h2 class="text-2xl font-bold">Join 10,000+ Freelancers</h2>
     <p class="text-muted-foreground">
       Start your 14-day free trial. No credit card required.
@@ -38,27 +45,30 @@
 <div style="width:350px;">
 
 <h1 class="text-2xl font-bold m-2">Create Account</h1>
-<p class="text-muted-foreground m-2">
-Start your free trial
-</p>
 
 <form action="/signup" method="post">
+<br>
+<div class="form-item">
+  <label class="label">Full Name</label>
+  <input class="input" type="text" name="user_name" placeholder="John Doe">  
+</div>
 
-<label class="label">Full Name</label>
-<input class="input" type="text" name="user_name" placeholder="John Doe">
+<div class="form-item">
+  <label class="label">Email</label>
+  <input class="input" type="text" name="user_email" placeholder="john@example.com">
+</div>
 
-<label class="label">Email</label>
-<input class="input" type="text" name="user_email" placeholder="john@example.com">
-
-<label class="label">Password</label>
-<input 
+<div class="form-item">
+  <label class="label">Password</label>
+  <input 
   type="password"
   id="password"
   class="input"
   name="user_password"
   onkeyup="checkPassword()"
   placeholder="Enter password"
->
+  >
+</div>
 
 <button class="btn btn-primary w-full m-2" type="submit">
 Create Account

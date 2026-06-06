@@ -1,7 +1,6 @@
 /* styles.css - Main theme and global styles */
 
 :root {
-  /* Color palette - converted from HSL to HEX */
   --background: #0f172a;
   --foreground: #f1f5f9;
   
@@ -80,6 +79,7 @@ a {
 
 .profile-wrapper {
   position: relative;
+  
 }
 
 .profile-btn {
@@ -87,7 +87,16 @@ a {
   align-items: center;
   gap: 8px;
   cursor: pointer;
+  padding-right: 1.5rem;
 }
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+}
+
 .sidebar-toggle-wrapper {
   height: 64px;
   display: flex;
@@ -108,6 +117,14 @@ a {
   color: #e5e7eb;
 }
 
+.profit-card {
+  height: 400px;
+  position: relative;
+}
+
+.profit-card canvas {
+  max-height: 330px;
+}
 
 /* Component styles */
 .glass-card {
@@ -173,6 +190,12 @@ a {
 
 .btn-ghost:hover {
   background-color: var(--secondary);
+}
+
+.client-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
 }
 
 .input {
@@ -322,7 +345,7 @@ a {
 
 .sidebar-nav-item.active {
   background-color: var(--sidebar-accent);
-  color: var(--primary);
+  color: var(--foreground);
 }
 
 .app-header {
@@ -350,47 +373,6 @@ a {
 }
 
 /* Grid and flex utilities */
-.flex {
-  display: flex;
-}
-
-.items-center {
-  align-items: center;
-}
-
-.justify-between {
-  justify-content: space-between;
-}
-
-.gap-1 { gap: 0.25rem; }
-.gap-2 { gap: 0.5rem; }
-.gap-3 { gap: 0.75rem; }
-.gap-4 { gap: 1rem; }
-
-.p-2 { padding: 0.5rem; }
-.p-4 { padding: 1rem; }
-.p-6 { padding: 1.5rem; }
-
-.m-2 { margin: 0.5rem; }
-.m-4 { margin: 1rem; }
-
-.w-full { width: 100%; }
-.h-full { height: 100%; }
-
-.rounded { border-radius: 0.375rem; }
-.rounded-lg { border-radius: var(--radius); }
-.rounded-full { border-radius: 9999px; }
-
-.text-sm { font-size: 0.875rem; }
-.text-base { font-size: 1rem; }
-.text-lg { font-size: 1.125rem; }
-.text-xl { font-size: 1.25rem; }
-.text-2xl { font-size: 1.5rem; }
-
-.font-medium { font-weight: 500; }
-.font-semibold { font-weight: 600; }
-.font-bold { font-weight: 700; }
-
 .text-foreground { color: var(--foreground); }
 .text-muted-foreground { color: var(--muted-foreground); }
 .text-primary { color: var(--primary); }
@@ -588,12 +570,14 @@ tbody tr:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
-  width: 100%;
+  margin-left: auto;
+  height: 3rem;
+  width: 3rem;
   background-color: var(--primary);
   color: var(--primary-foreground);
-  font-size: 0.875rem;
+  font-size: 2rem;
   font-weight: 600;
+  border-radius: 30%;
 }
 
 /* KPI Card */
@@ -1184,12 +1168,12 @@ tbody tr:hover {
 }
 
 .chart-card {
-  background: linear-gradient(180deg, #0b1730, #0a1428);
+  background: var(--background) ;
   border: 1px solid #1e293b;
   border-radius: 16px;
   padding: 20px;
-  min-height: 360px;
-
+  height: auto;
+  width: auto;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -1332,4 +1316,19 @@ tbody tr:hover {
 .toggle-lg {
   height: 2.75rem;
   padding: 0 1.25rem;
+}
+
+.badge-high {
+  background-color: var(--destructive);
+  color: var(--destructive-foreground);
+}
+
+.badge-medium {
+  background-color: var(--warning);
+  color: var(--warning-foreground);
+}
+
+.badge-low {
+  background-color: var(--success);
+  color: var(--success-foreground);
 }

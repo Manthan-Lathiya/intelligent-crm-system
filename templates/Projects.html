@@ -18,40 +18,58 @@
 <div id="projectModal" style="display:none;">
   <div class="dialog-overlay" onclick="closeProjectModal()"></div>
 
-  <div class="dialog-content">
+  <div class="dialog-content animate-in">
 
     <h2 class="text-xl font-bold m-2">New Project</h2>
 
     <form onsubmit="saveProject(event)">
+      <div class="form-item">
 
-      <label class="label">Client</label>
-      <select class="input" id="project_client">
-        {% for c in clients %}
-        <option value="{{ c.client_id }}">{{ c.name }}</option>
-        {% endfor %}
-      </select>
+        <label class="label">Client</label>
+        <select class="input" id="project_client">
+          {% for c in clients %}
+          <option value="{{ c.client_id }}">{{ c.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-item">
 
-      <label class="label">Project Name</label>
-      <input class="input" id="project_name" required>
+        <label class="label">Project Name</label>
+        <input class="input" id="project_name" required>
+      </div>
+      <div class="form-item">
 
-      <label class="label">Status</label>
-      <select class="input" id="project_status">
-        <option>Proposal</option>
-        <option>Ongoing</option>
-        <option>Paid</option>
-      </select>
+        <label class="label">Status</label>
+        <select class="input" id="project_status">
+          <option>Proposal</option>
+          <option>Ongoing</option>
+          <option>Paid</option>
+        </select>
+      </div>
 
-      <label class="label">Budget</label>
-      <input type="number" class="input" id="project_budget">
+      <div class="form-item">
 
-      <label class="label">Spent</label>
-      <input type="number" class="input" id="project_spent" value="0">
+        <label class="label">Budget</label>
+        <input type="number" class="input" id="project_budget">
+      </div>
 
-      <label class="label">Start Date</label>
-      <input type="date" class="input" id="project_start">
+      <div class="form-item">
 
-      <label class="label">Due Date</label>
-      <input type="date" class="input" id="project_due">
+        <label class="label">Spent</label>
+        <input type="number" class="input" id="project_spent" value="0">
+      </div>
+
+      <div class="form-item">
+
+        <label class="label">Start Date</label>
+        <input type="date" class="input" id="project_start">
+      </div>
+
+      <div class="form-item">
+
+        <label class="label">Due Date</label>
+        <input type="date" class="input" id="project_due">
+      </div>
 
       <div class="flex gap-3 m-2">
         <button type="button" class="btn btn-outline"

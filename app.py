@@ -1,67 +1,33 @@
 from functools import wraps
 import re
 from datetime import datetime
-from flask import Flask, render_template, request, redirect, session, flash, jsonify
-from flask_sqlalchemy import SQLAlchemy
+import pandas as pd
+import io
+import os
+from dotenv import load_dotenv
+from google import genai
+import json
+import matplotlib.pyplot as plt
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, Image, TableStyle
+from reportlab.lib import colors, pagesizes
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.units import inch
+from flask import Flask, render_template, request, redirect, session, flash, jsonify, send_file
 from sqlalchemy import func, distinct
+from models import db, Users, Clients, Interactions, Projects, Expenses
+from services.insight_engine import InsightEngine
+
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = "9065425f976cf3a967617fd8b1aeb8e92ef1f3b9a792861e93fb2dcfdfd8cd4a"
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:0202@localhost/smart_crm_system"
-db = SQLAlchemy(app)
+app.secret_key = os.getenv("SECRET_KEY")
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+db.init_app(app)
 
-class Users(db.Model):
-    __tablename__ = 'users'
-    user_id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), nullable=False)
-    email = db.Column(db.String(50), nullable=False)
-    password = db.Column(db.String(50), nullable=False)
-    created_at = db.Column(db.String(50), nullable=False)
-    
-class Clients(db.Model):
-    __tablename__ = 'clients'
-    client_id = db.Column(db.Integer, nullable=False, primary_key=True)
-    c_user_id = db.Column(db.Integer, nullable=False)
-    name = db.Column(db.String(50), nullable=False)
-    email = db.Column(db.String(50), nullable=False)
-    phone = db.Column(db.String(15), nullable=False)
-    company_name = db.Column(db.String(50), nullable=False)
-    status = db.Column(db.String(50), nullable=False)
-    total_revenue = db.Column(db.Float, nullable=False)
-    projects_count = db.Column(db.Integer, nullable=False)
-    avatar = db.Column(db.String(2), nullable=False)
-    
-class Interactions(db.Model):
-    __tablename__ = 'interactions'
-    interaction_id = db.Column(db.Integer, nullable=False, primary_key=True)
-    i_user_id = db.Column(db.Integer, nullable=False)
-    i_client_id = db.Column(db.Integer, nullable=False)
-    type = db.Column(db.String(10), nullable=False)
-    subject = db.Column(db.String(50), nullable=False)
-    summary = db.Column(db.String(200), nullable=False)
-    date = db.Column(db.String(50), nullable=False)
-    
-class Projects(db.Model):
-    __tablename__ = 'projects'
-    project_id = db.Column(db.Integer, primary_key=True)
-    p_user_id = db.Column(db.Integer, nullable=False)
-    p_client_id = db.Column(db.Integer, nullable=False)
-    name = db.Column(db.String(50), nullable=False)
-    status = db.Column(db.String(10), nullable=False)
-    budget = db.Column(db.Integer, nullable=False)
-    spent = db.Column(db.Integer, nullable=False)
-    start_date = db.Column(db.Date, nullable=False)
-    due_date = db.Column(db.Date, nullable=False)
+client = genai.Client(
+    api_key=os.getenv("GEMINI_API_KEY")
+)
 
-class Expenses(db.Model):
-    __tablename__ = "expenses"
-    expense_id = db.Column(db.Integer, primary_key=True)
-    e_user_id = db.Column(db.Integer, nullable=False)
-    title = db.Column(db.String(100), nullable=False)
-    category = db.Column(db.String(50), nullable=False)
-    amount = db.Column(db.Float, nullable=False)
-    date = db.Column(db.Date, nullable=False)
-    
 def login_required(f):
     @wraps(f)
     def wrap(*args, **kwargs):
@@ -142,6 +108,7 @@ def login():
 
         session['user_id'] = user.user_id
         session['user_name'] = user.name
+        session['user_email'] = user.email
         print(session)
         return redirect('/dashboard')
     return render_template('Login.html')
@@ -286,6 +253,7 @@ def interactions():
     )
 
 @app.route("/add_interaction", methods=["POST"])
+@login_required
 def add_interaction():
     data = request.get_json()
 
@@ -318,6 +286,7 @@ def projects():
     )
 
 @app.route("/add_project", methods=["POST"])
+@login_required
 def add_project():
     data = request.get_json()
 
@@ -512,11 +481,319 @@ def analytics_revenue_by_client():
         "values": [float(d[1]) for d in data]
     })
 
+@app.route('/reports', methods=['GET', 'POST'])
+@login_required
+def reports():
 
-@app.route('/insights')
+    if request.method == 'POST':
+        user_id = session["user_id"]
+
+        start_date = request.form.get("start_date")
+        end_date = request.form.get("end_date")
+
+        start = datetime.strptime(start_date, "%Y-%m-%d")
+        end = datetime.strptime(end_date, "%Y-%m-%d")
+
+        # ==========================
+        # DATA AGGREGATION
+        # ==========================
+
+        revenue = db.session.query(
+            func.coalesce(func.sum(Projects.budget), 0)
+        ).filter(
+            Projects.p_user_id == user_id,
+            Projects.status == "Paid",
+            Projects.due_date.between(start, end)
+        ).scalar()
+
+        expenses = db.session.query(
+            func.coalesce(func.sum(Expenses.amount), 0)
+        ).filter(
+            Expenses.e_user_id == user_id,
+            Expenses.date.between(start, end)
+        ).scalar()
+
+        profit = float(revenue) - float(expenses)
+
+        # Monthly revenue
+        monthly_data = db.session.query(
+            func.date_format(Projects.due_date, "%Y-%m").label("month"),
+            func.sum(Projects.budget)
+        ).filter(
+            Projects.p_user_id == user_id,
+            Projects.status == "Paid",
+            Projects.due_date.between(start, end)
+        ).group_by("month").all()
+
+        df = pd.DataFrame(monthly_data, columns=["month", "revenue"])
+
+        # ==========================
+        # TOP CLIENTS
+        # ==========================
+
+        top_clients = db.session.query(
+            Clients.name,
+            func.sum(Projects.budget)
+        ).join(
+            Projects, Clients.client_id == Projects.p_client_id
+        ).filter(
+            Projects.status == "Paid",
+            Projects.p_user_id == user_id,
+            Projects.due_date.between(start, end)
+        ).group_by(Clients.name).order_by(
+            func.sum(Projects.budget).desc()
+        ).limit(5).all()
+
+        # ==========================
+        # GENERATE CHART IMAGE
+        # ==========================
+
+        img_buffer = io.BytesIO()
+
+        if not df.empty:
+            plt.figure(figsize=(6, 4))
+            plt.plot(df["month"], df["revenue"])
+            plt.title("Revenue Trend")
+            plt.xticks(rotation=45)
+            plt.tight_layout()
+            plt.savefig(img_buffer, format="png")
+            plt.close()
+
+        img_buffer.seek(0)
+        
+        # ==========================
+        # DERIVED ANALYTICS
+        # ==========================
+
+        profit_margin = 0
+        burn_rate = 0
+        risk_level = "Low"
+
+        if revenue > 0:
+            profit_margin = round((profit / revenue) * 100, 2)
+        else:
+            profit_margin = 0
+
+        # Expense to revenue ratio
+        expense_ratio = 0
+        if revenue > 0:
+            expense_ratio = round((expenses / revenue) * 100, 2)
+
+        # Burn risk detection
+        if revenue == 0 and expenses > 0:
+            risk_level = "High"
+        elif profit < 0:
+            risk_level = "Medium"
+        else:
+            risk_level = "Low"
+
+        # Top client dependency
+        top_client_ratio = 0
+        if top_clients and revenue > 0:
+            top_client_ratio = round((float(top_clients[0][1]) / revenue) * 100, 2)
+
+
+        # ==========================
+        # GEMINI AI SUMMARY
+        # ==========================
+
+        try:
+            prompt = f"""
+            You are a senior financial analyst.
+
+            Return ONLY valid JSON.
+            Do NOT include markdown.
+            Do NOT include explanations.
+            Do NOT include formatting.
+
+            Data:
+            Period: {start_date} to {end_date}
+            Revenue: {revenue}
+            Expenses: {expenses}
+            Profit: {profit}
+            Profit Margin: {profit_margin}%
+            Expense Ratio: {expense_ratio}%
+            Risk Level: {risk_level}
+            Top Client Dependency: {top_client_ratio}%
+
+            Top Clients:
+            {top_clients}
+
+            Return JSON with this exact structure:
+
+            {{
+                "overall_performance": "...",
+                "profitability_comment": "...",
+                "risk_assessment": "...",
+                "growth_signal": "...",
+                "recommendation": "..."
+            }}
+
+            Each value must be under 30 words.
+            Tone must be professional and calm.
+            """
+
+
+
+            response = client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=prompt
+            )
+
+            raw_text = response.text.strip()
+
+            try:
+                summary_json = json.loads(raw_text)
+            except:
+                summary_json = {
+                    "overall_performance": "Unable to generate AI summary.",
+                    "profitability_comment": "",
+                    "risk_assessment": "",
+                    "growth_signal": "",
+                    "recommendation": ""
+                }
+
+        except Exception as e:
+            print(client.models.list())
+            print("Gemini Error:", e)  # DO NOT REMOVE THIS
+            summary_json = f"""
+            Between {start_date} and {end_date},
+            revenue was ${revenue}, expenses were ${expenses},
+            resulting in profit of ${profit}.
+            """
+
+
+
+        # ==========================
+        # BUILD PDF
+        # ==========================
+
+        buffer = io.BytesIO()
+        doc = SimpleDocTemplate(buffer, pagesize=pagesizes.A4)
+        elements = []
+        styles = getSampleStyleSheet()
+        
+        elements.append(Paragraph("Executive Summary", styles["Heading2"]))
+        elements.append(Spacer(1, 10))
+
+        for key, value in summary_json.items():
+            elements.append(Paragraph(f"<b>{key.replace('_',' ').title()}:</b> {value}", styles["Normal"]))
+            elements.append(Spacer(1, 8))
+
+        # KPI Table
+        data = [
+            ["Metric", "Value"],
+            ["Total Revenue", f"${revenue}"],
+            ["Total Expenses", f"${expenses}"],
+            ["Profit", f"${profit}"],
+        ]
+
+        table = Table(data, colWidths=[200, 200])
+        table.setStyle(TableStyle([
+            ('BACKGROUND', (0,0), (-1,0), colors.grey),
+            ('TEXTCOLOR',(0,0),(-1,0),colors.whitesmoke),
+            ('GRID', (0,0), (-1,-1), 1, colors.black),
+            ('ALIGN',(1,1),(-1,-1),'RIGHT')
+        ]))
+
+        elements.append(table)
+        elements.append(Spacer(1, 20))
+
+        # Add Chart
+        if not df.empty:
+            elements.append(Paragraph("Revenue Trend", styles["Heading2"]))
+            elements.append(Spacer(1, 10))
+            elements.append(Image(img_buffer, width=5*inch, height=3*inch))
+            elements.append(Spacer(1, 20))
+
+        # Top Clients Table
+        if top_clients:
+            elements.append(Paragraph("Top Clients", styles["Heading2"]))
+            elements.append(Spacer(1, 10))
+
+            client_data = [["Client", "Revenue"]]
+            for c in top_clients:
+                client_data.append([c[0], f"${float(c[1])}"])
+
+            client_table = Table(client_data, colWidths=[200, 200])
+            client_table.setStyle(TableStyle([
+                ('BACKGROUND', (0,0), (-1,0), colors.darkblue),
+                ('TEXTCOLOR',(0,0),(-1,0),colors.whitesmoke),
+                ('GRID', (0,0), (-1,-1), 1, colors.black),
+                ('ALIGN',(1,1),(-1,-1),'RIGHT')
+            ]))
+
+            elements.append(client_table)
+
+        doc.build(elements)
+
+        buffer.seek(0)
+
+        return send_file(
+            buffer,
+            as_attachment=True,
+            download_name="Business_Report.pdf",
+            mimetype='application/pdf'
+        )
+
+    return render_template("Reports.html")
+
+
+@app.route("/insights")
 @login_required
 def insights():
-    return render_template('Insights.html')
+
+    engine = InsightEngine(session["user_id"])
+    data = engine.generate_all()
+
+    # ---- AI Summary ----
+    try:
+        prompt = f"""
+        You are a professional business analyst.
+
+        Generate short 1 sentence summaries for:
+        expense_summary
+        profit_summary
+        dependency_summary
+        client_risk_summary
+
+        Return JSON only.
+
+        Expense Insight:
+        {data.get("expense")}
+
+        Profit Insight:
+        {data.get("profit")}
+
+        Client Dependency Insight:
+        {data.get("dependency")}
+
+        Client Risk Insight:
+        {data.get("client_risk")}
+        """
+
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt
+        )
+
+        raw = response.text.strip().replace("```json", "").replace("```", "")
+        summaries = json.loads(raw)
+
+    except:
+        summaries = {
+            "expense_summary": "Expense trend evaluated.",
+            "profit_summary": "Profit performance analyzed.",
+            "dependency_summary": "Revenue concentration calculated.",
+            "client_risk_summary": "Client inactivity reviewed."
+        }
+
+    return render_template(
+        "Insights.html",
+        insights=data,
+        ai=summaries
+    )
+
 
 @app.route('/settings')
 @login_required
@@ -527,5 +804,6 @@ def settings():
 def logout():
     session.clear()
     return redirect('/')
+
 
 app.run(debug=True)
